@@ -32,19 +32,48 @@ struct ContentView: View {
         //AsyncImage(url: URL(string: imageURL))
         
         // MARK: - Scale
-        AsyncImage(url: URL(string: imageURL), scale: 3.5)
+//        AsyncImage(url: URL(string: imageURL), scale: 3.5)
         // MARK: Place Holder
-        AsyncImage(url: URL(string: imageURL)) { image in
-            image.imageModifiers()
-                
-        } placeholder: {
-            Image(systemName: "photo.circle.fill")
-                .iconModifier()
+//        AsyncImage(url: URL(string: imageURL)) { image in
+//            image.imageModifiers()
+//
+//        } placeholder: {
+//            Image(systemName: "photo.circle.fill")
+//                .iconModifier()
+//        }
+//        .padding(40)
+        
+        // MARK: - Phase
+//        AsyncImage(url: URL(string: imageURL)) { phase in
+//            // Success
+//            // Failure
+//            // Empty
+//            if let image = phase.image {
+//                image.imageModifiers()
+//            } else if phase.error != nil {
+//                Image(systemName: "ant.circle.fill").iconModifier()
+//            } else {
+//                Image(systemName: "photo.circle.fill").iconModifier()
+//            }
+//        }
+        
+        // MARK: 5. Animation
+        AsyncImage(url: URL(string: imageURL),transaction: Transaction(animation: .spring(response: 0.5, dampingFraction: 0.6, blendDuration: 0.25)))  { phase in
+            switch phase {
+            case .success(let image):
+                image.imageModifiers()
+                    .transition(.move(edge: .bottom))
+            case .failure(_):
+                Image(systemName: "ant.circle.fill").iconModifier()
+            case .empty:
+                Image(systemName: "photo.circle.fill").iconModifier()
+            
+            @unknown default:
+                ProgressView()
+            }
+            
         }
         .padding(40)
-        
-        // MARK: - Extension
-        
     }
 }
 
